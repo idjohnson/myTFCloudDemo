@@ -14,6 +14,11 @@ jobs:
       - name: tests
         run: |
           set +x 
+          TIMEZONE="America/Chicago"     
+          sudo echo $TIMEZONE > /etc/timezone  
+          sudo cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
+          TZ=America/Chicago
+
           CURREPOCH=`date +%s`
           AHEADEPOCH=$(($CURREPOCH + 3600))
           BEHINDEPOCH=$(($CURREPOCH - 3600))
@@ -26,12 +31,21 @@ jobs:
           echo "Current: $CURRDATETIME"
           echo "Ahead: $AHEADDATETIME"
           echo "Behind: $BEHINDDATETIME"
+
+          printf '%(%FT%T%z)T\n' $CURRDATETIME
+
+          TZ=America/Chicago bash -c 'printf "%(%c)T\n" 0'
+          printf '%(%FT%T%z)T\n' $CURRDATETIME
+
       - name: tests
         run: |
           set -x 
           terraform --version
           
-          sudo apt update
-          sudo apt install -y opa
+          curl -L -o opa https://github.com/open-policy-agent/opa/releases/download/v0.45.0/opa_linux_amd64
 
-          opa version
+          ls -ltra
+          
+          chmod u+x ./opa
+
+          ./opa version
