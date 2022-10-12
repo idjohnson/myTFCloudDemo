@@ -15,7 +15,7 @@ jobs:
         run: |
           set +x 
           TIMEZONE="America/Chicago"     
-          sudo echo $TIMEZONE > /etc/timezone  
+          #sudo echo $TIMEZONE > /etc/timezone  
           sudo cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
           TZ=America/Chicago
 
@@ -45,7 +45,7 @@ jobs:
           curl -L -o opa https://github.com/open-policy-agent/opa/releases/download/v0.45.0/opa_linux_amd64
 
           ls -ltra
-          
+
           chmod u+x ./opa
 
           ./opa version
