@@ -49,11 +49,6 @@ jobs:
           terraform --version
           ./opa version
 
-          # Fake
-          AWS_ACCESS_KEY_ID="AK123451234512345"
-          AWS_SECRET_ACCESS_KEY="DHHHDAUUGHGHGHEIUIAHGHGH"
-          AWS_REGION="us-east-1"
-          
           # Set Up Terraform
           terraform init
           terraform plan --out tfplan.binary
