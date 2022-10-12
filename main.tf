@@ -3,7 +3,6 @@ terraform {
     organization = "ThePrincessKing"
     workspaces {
       name = "myTFexampleCLI"
-      tags = ["githubworkflow"]
     }
   }
 }
