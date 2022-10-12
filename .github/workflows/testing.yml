@@ -21,24 +21,8 @@ jobs:
           set -x 
           echo "Chicago DateTime: $CURRDATETIME"
           set +x 
-        
-          # Now do EST
-          sudo timedatectl set-timezone "America/New_York"
-          CURREPOCH=`date +%s`
-          CURRDATETIME=`date -d @$CURREPOCH`
 
-          set -x 
-          echo "NY DateTime: $CURRDATETIME"
-
-          # Now do PST
-          sudo timedatectl set-timezone "America/Los_Angeles"
-          CURREPOCH=`date +%s`
-          CURRDATETIME=`date -d @$CURREPOCH`
-
-          set -x 
-          echo "NY DateTime: $CURRDATETIME"
-
-          # can also use America/Louisville
+          # can also use America/Louisville  "America/New_York"   "America/New_York"
       - name: tests
         run: |
           set -x 
@@ -55,8 +39,18 @@ jobs:
           terraform show -json tfplan.binary > tfplan.json
 
           # OPA Policy Checks
-          opa exec --decision terraform/analysis/authz --bundle policy/ tfplan.json | jq -r ".result[] |.result"
+          OPACHECK=`./opa exec --decision terraform/analysis/authz --bundle policy/ tfplan.json | jq -r ".result[] |.result"`
+          echo $OPACHECK
+
+          # set env var
+          echo "OPACHECK=$OPACHECK" >> $GITHUB_ENV
           
+      - name: tests2
+        run: |
+          set -x 
+          export
+
+          echo $OPACHECK
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
