@@ -55,13 +55,11 @@ jobs:
           sed -i '1,9 s/^#//' main.tf 
 
           terraform init
-          `terraform apply -input=false` || true
+          terraform apply -auto-approve
 
         if: env.OPACHECK != 'false'
         env:
           TF_TOKEN_app_terraform_io: ${{ secrets.TERRAFORM_TOKEN }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: OpaFailed
         run: |
           set +x 
