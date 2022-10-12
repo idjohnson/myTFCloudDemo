@@ -48,6 +48,7 @@ jobs:
           echo "OPACHECK=$OPACHECK" >> $GITHUB_ENV
           echo "OPASCORE=$OPASCORE" >> $GITHUB_ENV
         env:
+          TF_TOKEN_app_terraform_io: ${{ secrets.TERRAFORM_TOKEN }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           
@@ -57,8 +58,15 @@ jobs:
           echo "OPA Check Passed: $OPACHECK"
           echo "OPA Score: $OPASCORE"
 
-          # Here we could actuall tf apply
+          # Here we could actually tf apply
+          terraform init
+          terraform plan
+
         if: env.OPACHECK != 'false'
+        env:
+          TF_TOKEN_app_terraform_io: ${{ secrets.TERRAFORM_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: tests2
         run: |
           set +x 

@@ -1,3 +1,14 @@
+terraform {
+  cloud {
+    organization = "ThePrincessKing"
+    workspaces {
+      name = "myTFexampleCLI"
+      tags = ["githubworkflow"]
+    }
+  }
+}
+
+
 provider "aws" {
     region = "us-west-1"
 }
