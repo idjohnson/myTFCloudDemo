@@ -16,7 +16,7 @@ jobs:
           set +x 
           CURREPOCH=`date +%s`
           AHEADEPOCH=$(($CURREPOCH + 3600))
-          BEHINDEPOCH=$(($CURREPOCH + 3600))
+          BEHINDEPOCH=$(($CURREPOCH - 3600))
 
           CURRDATETIME=`date -d @$CURREPOCH`
           AHEADDATETIME=`date -d @$AHEADEPOCH`
@@ -31,7 +31,7 @@ jobs:
           set -x 
           terraform --version
           
-          sudp apt update
-          sudo apt install opa
+          sudo apt update
+          sudo apt install -y opa
 
           opa version
