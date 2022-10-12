@@ -15,25 +15,20 @@ jobs:
         run: |
           set +x  
           sudo timedatectl set-timezone "America/Chicago" 
-          TZ=America/Chicago
+          #TZ=America/Chicago
 
           CURREPOCH=`date +%s`
-          AHEADEPOCH=$(($CURREPOCH + 3600))
-          BEHINDEPOCH=$(($CURREPOCH - 3600))
-
           CURRDATETIME=`date -d @$CURREPOCH`
-          AHEADDATETIME=`date -d @$AHEADEPOCH`
-          BEHINDDATETIME=`date -d @$BEHINDEPOCH`
-
           set -x 
-          echo "Current: $CURRDATETIME"
-          echo "Ahead: $AHEADDATETIME"
-          echo "Behind: $BEHINDDATETIME"
+          echo "Chicago DateTime: $CURRDATETIME"
 
-          printf '%(%FT%T%z)T\n' $CURRDATETIME
+          sudo timedatectl set-timezone "America/New_York" 
+          #TZ=America/Chicago
 
-          TZ=America/Chicago bash -c 'printf "%(%c)T\n" 0'
-          printf '%(%FT%T%z)T\n' $CURRDATETIME
+          CURREPOCH=`date +%s`
+          CURRDATETIME=`date -d @$CURREPOCH`
+          set -x 
+          echo "NY DateTime: $CURRDATETIME"
 
       - name: tests
         run: |
