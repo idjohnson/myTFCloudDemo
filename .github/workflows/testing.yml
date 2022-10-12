@@ -13,10 +13,8 @@ jobs:
         uses: actions/checkout@v2
       - name: tests
         run: |
-          set +x 
-          TIMEZONE="America/Chicago"     
-          #sudo echo $TIMEZONE > /etc/timezone  
-          sudo cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
+          set +x  
+          sudo timedatectl set-timezone "America/Chicago" 
           TZ=America/Chicago
 
           CURREPOCH=`date +%s`
