@@ -33,6 +33,10 @@ jobs:
           terraform --version
           ./opa version
 
+          # Not Terraform Cloud for our Test
+          # Comment out the first 9 lines
+          sed -i '1,9 s/^/#/' main.tf 
+
           # Set Up Terraform
           terraform init
           terraform plan --out tfplan.binary
@@ -48,7 +52,6 @@ jobs:
           echo "OPACHECK=$OPACHECK" >> $GITHUB_ENV
           echo "OPASCORE=$OPASCORE" >> $GITHUB_ENV
         env:
-          TF_TOKEN_app_terraform_io: ${{ secrets.TERRAFORM_TOKEN }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           
@@ -59,6 +62,10 @@ jobs:
           echo "OPA Score: $OPASCORE"
 
           # Here we could actually tf apply
+         
+          # Uncommnent the first 9 lines
+          sed -i '1,9 s/^#//' main.tf 
+
           terraform init
           terraform plan
 
