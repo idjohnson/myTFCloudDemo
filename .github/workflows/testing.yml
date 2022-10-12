@@ -15,30 +15,44 @@ jobs:
         run: |
           set +x  
           sudo timedatectl set-timezone "America/Chicago" 
-          #TZ=America/Chicago
-
           CURREPOCH=`date +%s`
           CURRDATETIME=`date -d @$CURREPOCH`
+
           set -x 
           echo "Chicago DateTime: $CURRDATETIME"
-
-          sudo timedatectl set-timezone "America/New_York" 
-          #TZ=America/Chicago
-
+          set +x 
+        
+          # Now do EST
+          sudo timedatectl set-timezone "America/New_York"
           CURREPOCH=`date +%s`
           CURRDATETIME=`date -d @$CURREPOCH`
+
           set -x 
           echo "NY DateTime: $CURRDATETIME"
 
+          # Now do PST
+          sudo timedatectl set-timezone "America/Los_Angeles"
+          CURREPOCH=`date +%s`
+          CURRDATETIME=`date -d @$CURREPOCH`
+
+          set -x 
+          echo "NY DateTime: $CURRDATETIME"
+
+          # can also use America/Louisville
       - name: tests
         run: |
           set -x 
-          terraform --version
           
           curl -L -o opa https://github.com/open-policy-agent/opa/releases/download/v0.45.0/opa_linux_amd64
-
-          ls -ltra
-
           chmod u+x ./opa
 
+          terraform --version
           ./opa version
+
+          # Set Up Terraform
+          terraform init
+          terraform plan --out tfplan.binary
+          terraform show -json tfplan.binary > tfplan.json
+          
+          # OPA Policy Checks
+          opa exec --decision terraform/analysis/authz --bundle policy/ tfplan.json | jq -r ".result[] |.result"
