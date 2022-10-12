@@ -55,7 +55,7 @@ jobs:
           sed -i '1,9 s/^#//' main.tf 
 
           terraform init
-          terraform apply -input=false
+          `terraform apply -input=false` || true
 
         if: env.OPACHECK != 'false'
         env:
