@@ -1,0 +1,20 @@
+name: PR And Main Build
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  
+jobs:
+  build_deploy_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: tests
+        run: |
+          which opa
+          which terraform
+          which tfenv
+          terraform --version
+          opa version
