@@ -13,18 +13,6 @@ jobs:
         uses: actions/checkout@v2
       - name: tests
         run: |
-          set +x  
-          sudo timedatectl set-timezone "America/Chicago" 
-          CURREPOCH=`date +%s`
-          CURRDATETIME=`date -d @$CURREPOCH`
-
-          set -x 
-          echo "Chicago DateTime: $CURRDATETIME"
-          set +x 
-
-          # can also use America/Louisville  "America/New_York"   "America/New_York"
-      - name: tests
-        run: |
           set -x 
           
           curl -L -o opa https://github.com/open-policy-agent/opa/releases/download/v0.45.0/opa_linux_amd64
@@ -55,7 +43,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           
-      - name: tests2
+      - name: OpaPassed
         run: |
           set -x 
           echo "OPA Check Passed: $OPACHECK"
@@ -74,7 +62,7 @@ jobs:
           TF_TOKEN_app_terraform_io: ${{ secrets.TERRAFORM_TOKEN }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: tests2
+      - name: OpaFailed
         run: |
           set +x 
           echo $OPACHECK
