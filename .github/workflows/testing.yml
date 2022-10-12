@@ -13,10 +13,25 @@ jobs:
         uses: actions/checkout@v2
       - name: tests
         run: |
+          set +x 
+          CURREPOCH=`date +%s`
+          AHEADEPOCH=$(($CURREPOCH + 3600))
+          BEHINDEPOCH=$(($CURREPOCH + 3600))
+
+          CURRDATETIME=`date -d @$CURREPOCH`
+          AHEADDATETIME=`date -d @$AHEADEPOCH`
+          BEHINDDATETIME=`date -d @$BEHINDEPOCH`
+
           set -x 
-          which opa || true
-          which terraform || true
-          which tfenv || true
-          terraform --version || true
-          opa version || true
-          sudo echo hi
+          echo "Current: $CURRDATETIME"
+          echo "Ahead: $AHEADDATETIME"
+          echo "Behind: $BEHINDDATETIME"
+      - name: tests
+        run: |
+          set -x 
+          terraform --version
+          
+          sudp apt update
+          sudo apt install opa
+
+          opa version
