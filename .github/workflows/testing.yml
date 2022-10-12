@@ -40,10 +40,13 @@ jobs:
 
           # OPA Policy Checks
           OPACHECK=`./opa exec --decision terraform/analysis/authz --bundle policy/ tfplan.json | jq -r ".result[] |.result"`
+          OPASCORE=`./opa exec --decision terraform/analysis/score --bundle policy/ tfplan.json | jq -r ".result[] |.result"`
           echo $OPACHECK
+          echo $OPASCORE
 
-          # set env var
+          # set env vars
           echo "OPACHECK=$OPACHECK" >> $GITHUB_ENV
+          echo "OPASCORE=$OPASCORE" >> $GITHUB_ENV
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -51,9 +54,19 @@ jobs:
       - name: tests2
         run: |
           set -x 
-          export
+          echo "OPA Check Passed: $OPACHECK"
+          echo "OPA Score: $OPASCORE"
 
+          # Here we could actuall tf apply
+        if: env.OPACHECK != 'false'
+      - name: tests2
+        run: |
+          set +x 
           echo $OPACHECK
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+          echo "OPA Check FAILED Score $OPASCORE"
+          MINSCORE=`cat policy/terraform.rego | grep 'blast_radius :=' | sed 's/^.* := //'`
+          echo "OPA Score Limit $MINSCORE"
+
+          exit 1
+        if: env.OPACHECK == 'false'
